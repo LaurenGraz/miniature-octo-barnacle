@@ -1,15 +1,15 @@
-import { store as htmlStore } from "./uploadHtml.js";
-
 export async function handler(event) {
-  const id = event.queryStringParameters.id;
+  const encoded = event.queryStringParameters.data;
 
-  if (!id || !htmlStore[id]) {
-    return { statusCode: 404, body: "HTML not found" };
+  if (!encoded) {
+    return { statusCode: 404, body: "No HTML provided" };
   }
+
+  const html = Buffer.from(encoded, "base64").toString("utf8");
 
   return {
     statusCode: 200,
     headers: { "Content-Type": "text/html" },
-    body: htmlStore[id]
+    body: html
   };
 }
